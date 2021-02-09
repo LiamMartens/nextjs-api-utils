@@ -19,7 +19,7 @@ export function answer<D = any, M = any>(req: NextApiRequest, res: NextApiRespon
     ...(!!data ? { data } : {}),
     meta: {
       time: (new Date()).toISOString(),
-      ...(!!meta ? { meta } : {}),
+      ...(!!meta ? meta : {}),
     }
   };
   return res.status(statusCode).send(responseObject);

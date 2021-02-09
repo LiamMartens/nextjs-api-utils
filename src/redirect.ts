@@ -9,12 +9,13 @@ export type RedirectOption = string | {
 
 export type RedirectOptions = {
   redirectTo: RedirectOption;
-  statusCode: number;
+  statusCode?: number;
   errorCode?: string;
   useQueryParam?: boolean;
 }
 
 export function redirect(req: NextApiRequest, res: NextApiResponse, options: RedirectOptions) {
+  const statusCode = options.statusCode ?? 200;
   const redirectTo = options.redirectTo;
 
   const fromQuery = options.useQueryParam !== false ? (req.query.redirect_uri as string | undefined) : undefined;
@@ -32,7 +33,7 @@ export function redirect(req: NextApiRequest, res: NextApiResponse, options: Red
   res.statusCode = 303;
   res.setHeader('Location', buildUrl(url, {
     ...query,
-    ...((options.statusCode >= 400) ? { statusCode: options.statusCode } : {}),
+    ...((statusCode >= 400) ? { statusCode: statusCode } : {}),
     ...(options.errorCode ? { errorCode: options.errorCode } : {}),
   }));
   return res.end();
